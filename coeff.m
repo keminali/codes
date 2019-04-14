@@ -1,7 +1,6 @@
-* Matlab code for Cp calculation  
-input: unscaled moment of one blade
-
-output: power coefficient of a 3-blades wind/tidal turbine 
+% Matlab code for Cp calculation  
+%% input: unscaled moment of one blade
+%% output: power coefficient of a 3-blades wind/tidal turbine 
 
 function cp=coeff(m)
 % v : velocity
