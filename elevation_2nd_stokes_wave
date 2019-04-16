@@ -1,0 +1,51 @@
+
+
+/*wave elevation of second order stokes wave for e387*/
+/**************************/
+eta=H/2*cos(kx)+H*H*k/16*cosh(kd)*(2+cosh(2kd))*cos(2*k*x)/(sinh(3kd)*sinh(3kd)*sinh(3kd))
+  eta= 0.076/2*cos(2*pi/4.8*x)+0.076*0.076*(2*pi/4.8)/16*cosh(2*pi/4.8*1.6)*(2+cosh(2*2*pi/4.8*1.6))*cos(2*2*pi/4.8*x)/   (sinh(3*2*pi/4.8*1.6)*sinh(3*2*pi/4.8*1.6)*sinh(3*2*pi/4.8*1.6))
+  
+# define pi 3.14159265359  
+/*define variable*/
+real eta
+real U; /*free stream velocity*/
+real H; /*wave height*/
+real g; /*gravity acceleration*/
+real k; /*wave number*/
+real L; /*wave length*/
+real z; /*z(vertical) axis*/
+real d; /*water depth*/
+real theta_t; /*wave phase*/
+real T;/*wave period*/ 
+real omega; /*wave angular velocity*/
+real t; /*time*/
+real theta_t; /*theta_t=-omega*t*/
+/*assign values to variables*/
+U=0.6;
+H=0.076;
+g=9.81;
+L=4.8;
+k=2.0*pi/L;
+d=1.6;
+T=1.43;
+omega=2.0*pi/T;
+
+theta_t=-omega*t;
+z=r[2]; /*r[2] is z coordinates*/
+
+/*DEFINE_PROFILE: define a custom boundary profile  that varies as a function of z coordinates or time.*/
+DEFINE_PROFILE(inlet_velocity, ft, var) /* DEFINE Macros, ft is a thread; var:index */
+{ 
+face_t f; /* Face index */ 
+
+begin_f_loop(f,ft) /* face loop macro ,loop over all faces in a given face thread “ft”*/ 
+{
+ F_CENTROID(r,f,ft); /*only in the pressure-based solver, F_CENTROID finds the coordinate position of the centroid of the face "f" and stores the coordinates in the "r" array */
+F_PROFILE(f,ft,var) = U + H*g*k*cosh(k*(z+d))*cos(theta_t)/[2*omega*cosh(k*d)]+3*H*H*omega*k*cosh(2*k*(z+d))*cosh(2*theta_t)]/[16*sinh(k*d)^4]+ H*g*k*sinh(k*(z+d))*sin(theta_t)/[2*omega*cosh(k*d)]+3*H*H*omega*k*sinh(2*k*(z+d))*sin(2*theta_t)]/[16*sinh(k*d)^4]; 
+}
+end_f_loop(f,ft)
+}
+
+
+
+
